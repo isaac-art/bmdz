@@ -14,22 +14,26 @@ import { BridgeMint } from './BridgeMint'
 
 import './App.css'
 
+const chains = [mainnet, zora, optimism, arbitrum, polygon]
+
+const projectId = '24e38ae614a2699cb2ca969bcc39def5'
+
+const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
+
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors: w3mConnectors({ projectId, chains }),
+  publicClient
+})
+    
 
 function  App() {
-  const chains = [mainnet, zora, optimism, arbitrum, polygon]
 
-  const projectId = '24e38ae614a2699cb2ca969bcc39def5'
-      
-  const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
-  const wagmiConfig = createConfig({
-    autoConnect: true,
-    connectors: w3mConnectors({ projectId, chains }),
-    publicClient
-  })
   const { address, connector, isConnected } = useAccount()
   const { chain } = useNetwork()
   const ethereumClient = new EthereumClient(wagmiConfig, chains)
-  
+
+
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
